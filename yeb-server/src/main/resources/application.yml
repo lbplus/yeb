@@ -1,0 +1,62 @@
+server:
+  port: 8081 # 后端端口
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: "jdbc:mysql://localhost:3306/yeb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai"
+    username: root
+    password: root1234
+
+    # 数据源
+    hikari:
+      pool-name: DateHikariCP # 连接池名
+      minimum-idle: 5 # 最小空闲连接数
+      idle-timeout: 180000 # 空闲连接存活最大时间，默认600000（10分钟）
+      maximum-pool-size: 10 # 最大连接数，默认10
+      auto-commit: true # 从连接池返回的连接的自动提交
+      max-lifetime: 180000 # 连接最大存活时间，0表示永久存活，默认1800000（30分钟）
+      connection-timeout: 3000 # 连接超时时间，默认30000（30秒）
+      connection-test-query: SELECT 1 # 测试连接是否可用的查询语句
+
+  redis:
+    timeout: 10000ms # 超时时间
+    host: 127.0.0.1 # 服务器地址，虚拟机的，或者远程服务器
+    port: 6379 # 服务器端口
+    database: 0 # 选择哪个库，默认0库
+    lettuce:
+      pool:
+        max-active: 1024 # 最大连接数，默认 8
+        max-wait: 10000ms # 最大连接阻塞等待时间，单位毫秒，默认 -1
+        max-idle: 200 # 最大空闲连接，默认 8
+        min-idle: 5 # 最小空闲连接
+
+  # rabbitmq配置
+  rabbitmq:
+    username: guest
+    password: guest
+    host: localhost
+    port: 5672
+    publisher-confirm-type: correlated # 配置消息到达交换机的确认回调
+    publisher-returns: true # 配置消息路由到队列失败的回调
+
+
+# Mybatis-plus配置
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/*Mapper.xml #配置Mapper映射文件
+  type-aliases-package: com.blate.server.pojo # 配置MyBatis数据返回类型别名（默认别名是类名）
+  configuration:
+    map-underscore-to-camel-case: false # 不自动驼峰命名
+
+
+#slf4j sql 打印
+logging:
+  level:
+    com.blate.server.mapper: debug
+
+# jwt令牌
+jwt:
+  tokenHeader: Authorization # Jwt存储的请求头
+  secret: yeb-secret # JWT 加解密使用的密钥
+  expiration: 604800 # Jwt 的超期限时间（60*60）*24,也就是一天有效时间，单位秒
+  tokenHead: Bearer # Jwt负载中拿到开头
